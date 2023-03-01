@@ -3,6 +3,8 @@
 from tkinter import *
 from tkinter import messagebox
 
+from PIL import Image, ImageTk
+
 import psycopg2
 
 # ==================== Login Page ===========================
@@ -25,6 +27,9 @@ class System:
         #     database="employee",
         #     user="postgres",
         #     password="password")
+
+    def destroy_object(self):
+        del self
 
     @staticmethod
     def clear_frames(frame_name):
@@ -97,38 +102,54 @@ class User:
         self.options_frame = Frame(self.root, bg="#c3c3c3")
 
         # log out btn
-        self.logOut_btn = Button(self.options_frame, text="Log Out", font=('Bold', 15), fg="#158aff",
-                                 bd=0, bg="#c3c3c3", command=lambda: self.indicate(self.logOut_indicate, self.logOut_page))
-        self.logOut_btn.place(x=10, y=50)
+
+        img_logout = Image.open("images/logout.png")
+        img_logout = img_logout.resize((40, 40), Image.Resampling.LANCZOS)
+        self.photo_logout = ImageTk.PhotoImage(img_logout)
+        self.logOut_btn = Button(self.options_frame, text=" Log Out", font=('Bold', 18), fg="#158aff",
+                                 bd=5, height=60, width=170, image=self.photo_logout, compound=LEFT, command=lambda: self.indicate(self.logOut_indicate, self.logOut_page))
+        self.logOut_btn.place(x=25, y=80)
 
         self.logOut_indicate = Label(self.options_frame, text="", bg="#c3c3c3")
-        self.logOut_indicate.place(x=3, y=50, width=5, height=35)
+        self.logOut_indicate.place(x=10, y=80, width=10, height=70)
 
         # profile btn
-        self.profile_btn = Button(self.options_frame, text="Profile", font=('Bold', 15), fg="#158aff",
-                                  bd=0, bg="#c3c3c3", command=lambda: self.indicate(self.profile_indicate, self.profile_page))
-        self.profile_btn.place(x=10, y=100)
+        img_profile = Image.open("images/person.png")
+        img_profile = img_profile.resize((40, 40), Image.Resampling.LANCZOS)
+        self.photo_profile = ImageTk.PhotoImage(img_profile)
+        self.profile_btn = Button(self.options_frame, text=" Profile", font=('Bold', 18), fg="#158aff",
+                                  height=60, width=170, image=self.photo_profile, compound=LEFT,
+                                  bd=5, command=lambda: self.indicate(self.profile_indicate, self.profile_page))
+        self.profile_btn.place(x=25, y=160)
 
         self.profile_indicate = Label(
             self.options_frame, text="", bg="#c3c3c3")
-        self.profile_indicate.place(x=3, y=100, width=5, height=35)
+        self.profile_indicate.place(x=10, y=160, width=10, height=70)
 
         # messages btn
-        self.messages_btn = Button(self.options_frame, text="Messages", font=('Bold', 15), fg="#158aff",
-                                   bd=0, bg="#c3c3c3", command=lambda: self.indicate(self.messages_indicate, self.messages_page))
-        self.messages_btn.place(x=10, y=150)
+        img_message = Image.open("images/message.png")
+        img_message = img_message.resize((40, 40), Image.Resampling.LANCZOS)
+        self.photo_message = ImageTk.PhotoImage(img_message)
+        self.messages_btn = Button(self.options_frame, text=" Messages", font=('Bold', 18), fg="#158aff",
+                                   height=60, width=170, image=self.photo_message, compound=LEFT,
+                                   bd=5, command=lambda: self.indicate(self.messages_indicate, self.messages_page))
+        self.messages_btn.place(x=25, y=240)
 
         self.messages_indicate = Label(
             self.options_frame, text="", bg="#c3c3c3")
-        self.messages_indicate.place(x=3, y=150, width=5, height=35)
+        self.messages_indicate.place(x=10, y=240, width=10, height=70)
 
         # tasks btn
-        self.tasks_btn = Button(self.options_frame, text="Tasks Page", font=('Bold', 15), fg="#158aff",
-                                bd=0, bg="#c3c3c3", command=lambda: self.indicate(self.tasks_indicate, self.tasks_page))
-        self.tasks_btn.place(x=10, y=200)
+        img_tasks = Image.open("images/tasks.png")
+        img_tasks = img_tasks.resize((40, 40), Image.Resampling.LANCZOS)
+        self.photo_tasks = ImageTk.PhotoImage(img_tasks)
+        self.tasks_btn = Button(self.options_frame, text=" Tasks", font=('Bold', 18), fg="#158aff",
+                                height=60, width=170, image=self.photo_tasks, compound=LEFT,
+                                bd=5, command=lambda: self.indicate(self.tasks_indicate, self.tasks_page))
+        self.tasks_btn.place(x=25, y=320)
 
         self.tasks_indicate = Label(self.options_frame, text="", bg="#c3c3c3")
-        self.tasks_indicate.place(x=3, y=200, width=5, height=35)
+        self.tasks_indicate.place(x=10, y=320, width=10, height=70)
 
         self.options_frame.pack(side=LEFT)
         self.options_frame.pack_propagate(False)
@@ -137,20 +158,32 @@ class User:
         # showing work frame
         self.main_frame = Frame(self.root, highlightbackground='black',
                                 highlightthickness=2)
-
+        self.main_frame_label = Label(
+            self.main_frame, text=f'WELCOME\n\n{self.first} {self.last}', font=('Bold', 50))
+        self.main_frame_label.place(relx=.5, rely=.5, anchor=CENTER)
         self.main_frame.pack(side=LEFT)
         self.main_frame.pack_propagate(False)
         self.main_frame.configure(height=700, width=650)
 
     def logOut_page(self):
-        logOut_frame = Frame(self.main_frame)
-        lb = Label(logOut_frame, text='Home Page\n\nPage: 1',
-                   font=('Bold', 30))
-        lb.pack()
+        answer = messagebox.askyesno(
+            title="Confirmation", message="Are you sure you want to logout?")
+        if answer:
+            print(self)
+            self.root.destroy()
+            del self
+
+            print("root destroyed")
+        else:
+            pass
+        # logOut_frame = Frame(self.main_frame)
+        # lb = Label(logOut_frame, text='Home Page\n\nPage: 1',
+        #            font=('Bold', 30))
+        # lb.pack()
         # myscrollbar = Scrollbar(logOut_frame, orient="vertical")
         # myscrollbar.pack(side="right", fill="y")
 
-        logOut_frame.pack(pady=20)
+        # logOut_frame.pack(pady=20)
 
     def profile_page(self):
         profile_frame = Frame(self.main_frame)
@@ -199,8 +232,33 @@ class User:
 
 
 class Admin(User):
-    def __init__(self, root) -> None:
-        super().__init__(root)
+    def __init__(self, first, last, num, root) -> None:
+        super().__init__(first, last, num, root)
+
+    def home_page(self):
+        super().home_page()
+
+        img_users = Image.open("images/people.png")
+        img_users = img_users.resize((40, 40), Image.Resampling.LANCZOS)
+        self.photo_users = ImageTk.PhotoImage(img_users)
+        self.users_btn = Button(self.options_frame, text=" Employee", font=('Bold', 18), fg="#158aff", height=60, width=170, image=self.photo_users, compound=LEFT,
+                                bd=5, command=lambda: self.indicate(self.users_indicate, self.users_page))
+        self.users_btn.place(x=25, y=400)
+
+        self.users_indicate = Label(self.options_frame, text="", bg="#c3c3c3")
+        self.users_indicate.place(x=10, y=400, width=10, height=70)
+
+    def users_page(self):
+        users_frame = Frame(self.main_frame)
+        lb = Label(users_frame, text='about Page\n\nPage: 4',
+                   font=('Bold', 30))
+        lb.pack()
+
+        users_frame.pack(pady=20)
+
+    def hide_indicate(self):
+        super().hide_indicate()
+        self.users_indicate.config(bg="#c3c3c3")
 
 
 # ===================== first page ===========================
@@ -221,7 +279,13 @@ class Admin(User):
 # main_frame.pack(side=LEFT)
 # main_frame.pack_propagate(False)
 # main_frame.configure(height=400, width=500)
-if __name__ == "__main__":
-    root = Tk()
-    obj = System(root)
-    root.mainloop()
+
+
+def starter():
+    if __name__ == "__main__":
+        root = Tk()
+        obj = System(root)
+        root.mainloop()
+
+
+starter()
