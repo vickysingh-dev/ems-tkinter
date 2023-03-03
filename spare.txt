@@ -1,0 +1,5 @@
+# self.conn = psycopg2.connect(
+        #     host="localhost",
+        #     database="employee",
+        #     user="postgres",
+        #     password="password")

@@ -5,7 +5,7 @@ from tkinter import messagebox
 
 from PIL import Image, ImageTk
 
-import psycopg2
+from database import login
 
 # ==================== Login Page ===========================
 
@@ -22,12 +22,6 @@ class System:
 
         self.login_menu()
 
-        # self.conn = psycopg2.connect(
-        #     host="localhost",
-        #     database="employee",
-        #     user="postgres",
-        #     password="password")
-
     def destroy_object(self):
         del self
 
@@ -36,12 +30,16 @@ class System:
         for frame in frame_name.winfo_children():
             frame.destroy()
 
-    # login menu
-
     def login_menu(self):
         def login():
             userid = entry1.get()
             password = entry2.get()
+
+            # self.clear_frames(self.root)
+            # home_frame = Frame(self.root, highlightthickness=2)
+            # home_frame.place(relx=.5, rely=.5, anchor=CENTER)
+            # home_frame.configure(height=700, width=900)
+            # user = User("user", "pass", 123, home_frame)
 
             if (userid == "" or password == ""):
                 messagebox.showinfo("", "Blank Fields not Allowed")
@@ -59,6 +57,8 @@ class System:
                 admin = Admin("admin", "pass", 123, home_frame)
             else:
                 messagebox.showinfo("", "Incorrect User Details")
+
+        self.clear_frames(self.root)
 
         login_frame = Frame(self.root, highlightthickness=2)
 
@@ -82,10 +82,6 @@ class System:
 
         Button(login_frame, text="Login", command=login, height=2, font=("BOLD", 18),
                width=15, bd=4).place(x=90, y=150)
-
-    def home_page(self):
-
-        pass
 
 
 class User:
@@ -172,23 +168,14 @@ class User:
             print(self)
             self.root.destroy()
             del self
-
-            print("root destroyed")
-        else:
-            pass
-        # logOut_frame = Frame(self.main_frame)
-        # lb = Label(logOut_frame, text='Home Page\n\nPage: 1',
-        #            font=('Bold', 30))
-        # lb.pack()
-        # myscrollbar = Scrollbar(logOut_frame, orient="vertical")
-        # myscrollbar.pack(side="right", fill="y")
-
-        # logOut_frame.pack(pady=20)
+            starter()
 
     def profile_page(self):
         profile_frame = Frame(self.main_frame)
         lb = Label(profile_frame, text='Menu Page\n\nPage: 2',
                    font=('Bold', 30))
+        object_details = ['First', 'Last', 'Designation', 'Email',
+                          'Phone', 'doj', 'experience', 'salary', 'image']
         # myscrollbar = Scrollbar(profile_frame, orient="vertical")
         # myscrollbar.pack(side="right", fill="y")
         lb.pack()
@@ -259,26 +246,6 @@ class Admin(User):
     def hide_indicate(self):
         super().hide_indicate()
         self.users_indicate.config(bg="#c3c3c3")
-
-
-# ===================== first page ===========================
-
-
-# options side bar
-
-
-# options_frame.pack(side=LEFT)
-# options_frame.pack_propagate(False)
-# options_frame.configure(width=150, height=400)
-
-
-# main frame
-
-# main_frame = Frame(root, highlightbackground='black', highlightthickness=2)
-
-# main_frame.pack(side=LEFT)
-# main_frame.pack_propagate(False)
-# main_frame.configure(height=400, width=500)
 
 
 def starter():
